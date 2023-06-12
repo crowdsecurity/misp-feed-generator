@@ -351,7 +351,7 @@ misp_feed_reset_frequency: 1w
 misp_event_analysis_level: 2
 misp_feed_orgc:
   name: CrowdSec
-  uuid: 5f6e7b5a-6b1a-4c0e-8a3c-9b9c5a474e8c
+  uuid: {str(uuid.uuid4())}
 
 misp_feed_threat_level_id: 4
 misp_feed_published: false
@@ -363,9 +363,9 @@ output_dir: ./crowdsec-misp-feed/
 
 # Bouncer Server Config
 listen_addr: 0.0.0.0
-listen_port: 2450
+listen_port: 54500
 tls:
-  enabled: true
+  enabled: false
   cert_file: "cert.pem"
   key_file: "key.pem"
 

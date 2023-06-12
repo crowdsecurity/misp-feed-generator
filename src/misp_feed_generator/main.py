@@ -325,7 +325,7 @@ def run(config):
     first_run = True
     while True:
         try:
-            lapi_data = fetch_lapi_data(config, first_run)
+            lapi_data = fetch_lapi_data(config, True)
         except Exception as e:
             logger.error(f"Error fetching data from LAPI: {e}")
             if first_run:
@@ -341,7 +341,7 @@ def generate_base_config():
 # CrowdSec Config
 crowdsec_lapi_url: http://localhost:8080/
 crowdsec_lapi_key: <your_lapi_key>
-crowdsec_update_frequency: 1m
+crowdsec_update_frequency: 5m
 include_scenarios_containing: [] # ignore IPs banned for triggering scenarios not containing either of provided word, eg ["ssh", "http"]
 exclude_scenarios_containing: [] # ignore IPs banned for triggering scenarios containing either of provided word
 only_include_decisions_from: [] # only include IPs banned due to decisions orginating from provided sources. eg value ["cscli", "crowdsec"]
@@ -390,7 +390,7 @@ def main():
         "-g", help="Generate base config", default=False, action="store_true"
     )
     args = parser.parse_args()
-    if args.g:
+    if args.g: 
         generate_base_config()
         sys.exit(0)
     config = get_config(args.config)

@@ -5,11 +5,11 @@ import unittest
 import freezegun
 
 from misp_feed_generator import main
-from misp_feed_generator.utils import set_default_config, validate_config
+from misp_feed_generator.utils import set_default_config, validated_config
 
 
 class TestSimulation(unittest.TestCase):
-    config = validate_config(
+    config = validated_config(
         set_default_config(
             {
                 "crowdsec_lapi_url": "http://localhost:8080/",

@@ -71,7 +71,7 @@ def set_default_config(config):
     return config
 
 
-def validate_config(config):
+def validated_config(config):
     if os.path.exists(config["output_dir"]) and os.listdir(config["output_dir"]):
         logger.warning(
             f"Output directory {config['output_dir']} exists and is not empty"

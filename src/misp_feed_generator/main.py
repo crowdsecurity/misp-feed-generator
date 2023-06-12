@@ -18,7 +18,7 @@ from misp_feed_generator.utils import (
     logger,
     set_default_config,
     set_logging,
-    validate_config,
+    validated_config,
 )
 
 event_by_scenario_and_origin = {}  # key: scenario_origin, value: event
@@ -333,7 +333,7 @@ def run(config):
             continue
         first_run = False
         manage_feeds(config, lapi_data)
-        time.sleep(config["crowdsec_update_frequency"])
+        time.sleep(config["crowdsec_update_frequency"].total_seconds())
 
 
 def generate_base_config():
@@ -395,7 +395,7 @@ def main():
         sys.exit(0)
     config = get_config(args.config)
     config = set_default_config(config)
-    validate_config(config)
+    config = validated_config(config)
     run(config)
 
 

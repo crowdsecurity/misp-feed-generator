@@ -107,14 +107,18 @@ def manage_feeds(config, lapi_data):
             object = create_misp_feed_object(new_decision, event["Event"]["uuid"])
             event["Event"]["Object"].append(object)
         else:
-            update_object_by_ip(event, new_decision["value"], deleted=False)
+            event_by_scenario_and_origin[key] = update_object_by_ip(
+                event, new_decision["value"], deleted=False
+            )
 
     for deleted_decision in lapi_data["deleted"]:
         key = decision_to_key(deleted_decision)
         if key in event_by_scenario_and_origin:
             event = event_by_scenario_and_origin[key]
             ip = deleted_decision["value"]
-            update_object_by_ip(event, ip, deleted=True)
+            event_by_scenario_and_origin[key] = update_object_by_ip(
+                event, ip, deleted=True
+            )
 
     # Save events to files
     for _, event in event_by_scenario_and_origin.items():
@@ -124,17 +128,21 @@ def manage_feeds(config, lapi_data):
 
 
 def update_object_by_ip(event, ip, deleted):
-    for obj in event["Event"]["Object"]:
+    for i, obj in enumerate(event["Event"]["Object"]):
         if obj["Attribute"][0]["value"] == ip:
             add_hash = False
-            obj["deleted"] = deleted
-            if not deleted:
-                add_hash = True
-                obj["last_seen"] = datetime.datetime.now().isoformat()
-                obj["Attribute"][0]["last_seen"] = datetime.datetime.now().isoformat()
             if obj["Attribute"][0]["deleted"] != deleted:
                 add_hash = True
-                obj["Attribute"][0]["deleted"] = deleted
+                event["Event"]["Object"][i]["Attribute"][0]["deleted"] = deleted
+            if not deleted:
+                add_hash = True
+                event["Event"]["Object"][i][
+                    "last_seen"
+                ] = datetime.datetime.now().isoformat()
+                event["Event"]["Object"][i]["Attribute"][0][
+                    "last_seen"
+                ] = datetime.datetime.now().isoformat()
+
             if add_hash:
                 hashes_to_save.append(
                     (
@@ -149,6 +157,7 @@ def update_object_by_ip(event, ip, deleted):
                         event["Event"]["uuid"],
                     )
                 )
+    return event
 
 
 def ip_exists_in_event(ip, event):
@@ -390,7 +399,7 @@ def main():
         "-g", help="Generate base config", default=False, action="store_true"
     )
     args = parser.parse_args()
-    if args.g: 
+    if args.g:
         generate_base_config()
         sys.exit(0)
     config = get_config(args.config)

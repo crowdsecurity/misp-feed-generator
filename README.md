@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/crowdsecurity/misp-feed-generator/raw/main/docs/static/logo.png" alt="CrowdSec" title="CrowdSec" width="280" height="300" />
+<img src="https://github.com/crowdsecurity/misp-feed-generator/raw/main/docs/static/logo.png" alt="CrowdSec" title="CrowdSec" width="350" height="300" />
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/build-pass-green">

@@ -19,6 +19,7 @@ from misp_feed_generator.utils import (
     set_default_config,
     set_logging,
     validated_config,
+    scenario_to_behavior,
 )
 
 event_by_scenario_and_origin = {}  # key: scenario_origin, value: event
@@ -170,7 +171,16 @@ def ip_exists_in_event(ip, event):
 def create_misp_event(decision, config):
     time_now = datetime.datetime.now()
     timestamp_now = int(time_now.timestamp())
-
+    tags = []
+    if decision["scenario"] in scenario_to_behavior:
+        behavior = scenario_to_behavior[decision["scenario"]]
+        tags.append(
+            {
+                "exportable": True,
+                "colour": "#52488e",
+                "name": f'crowdsec:behavior="{behavior}"',
+            }
+        )
     return {
         "Event": {
             "analysis": int(config["misp_feed_analysis_level"]),
@@ -186,7 +196,7 @@ def create_misp_event(decision, config):
                 "name": config["misp_feed_orgc"]["name"],
                 "uuid": config["misp_feed_orgc"]["uuid"],
             },
-            "Tag": config["misp_feed_tags"],
+            "Tag": config["misp_feed_tags"] + tags,
             "Object": [],
         }
     }

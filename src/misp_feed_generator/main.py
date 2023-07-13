@@ -91,6 +91,7 @@ def serve_dir(config):
 
 
 def manage_feeds(config, lapi_data):
+    global event_by_scenario_and_origin
     global last_time_manage_feed_called
     if (
         datetime.datetime.now() - last_time_manage_feed_called
@@ -135,6 +136,7 @@ def update_object_by_ip(event, ip, deleted):
             if obj["Attribute"][0]["deleted"] != deleted:
                 add_hash = True
                 event["Event"]["Object"][i]["Attribute"][0]["deleted"] = deleted
+                event["Event"]["Object"][i]["deleted"] = deleted
             if not deleted:
                 add_hash = True
                 event["Event"]["Object"][i][
